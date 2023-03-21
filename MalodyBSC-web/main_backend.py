@@ -9,7 +9,7 @@ import redis_lock
 conn = StrictRedis()
 app = Flask(__name__, static_folder='dist')
 
-VID = "3324"
+VID = "3840"
 
 
 @app.route('/bsc')

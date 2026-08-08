@@ -1,12 +1,17 @@
 # MalodyBSC-android
-Android版Malody谱面调速器。
 
-## 目录说明
+Android 版 Malody 谱面调速器（纯本地实现，不依赖 Web 后端）。
 
-- `MalodyBSC-android`：安卓APP源码，包含谱面转存功能，以及WebView。
-- `MalodyBSC-web`：vue3前端以及Flask后端代码。
+## 状态
 
+正在将原「Android 壳 + Web 后端」架构重构为纯本地 App：
+
+- [x] 移除 Web 代码（MalodyBSC-web、WebView）
+- [ ] 移植谱面解析 / 生成逻辑
+- [ ] 纯原生音频变速
+- [ ] 原生 UI 与交互
+- [ ] 完善文档
 
 ## LICENSE
-MIT
 
+MIT

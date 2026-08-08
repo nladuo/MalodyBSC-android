@@ -239,7 +239,7 @@ public final class BeatmapGenerator {
     }
 
     /** 与 Python f"{speed}" 一致的格式：1.2 → "1.2"，1.0 → "1.0" */
-    static String formatSpeed(double speed) {
+    public static String formatSpeed(double speed) {
         return String.valueOf(speed);
     }
 

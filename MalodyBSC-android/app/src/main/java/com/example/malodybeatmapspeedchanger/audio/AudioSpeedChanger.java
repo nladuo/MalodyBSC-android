@@ -240,24 +240,24 @@ public class AudioSpeedChanger implements AudioProcessor {
             if (!inputDone) {
                 int inIndex = encoder.dequeueInputBuffer(10_000);
                 if (inIndex >= 0) {
-                    ByteBuffer buf = encoder.getInputBuffer(inIndex);
-                    buf.clear();
-                    int copy = Math.min(frameSamples, pcm.length - offset);
-                    for (int i = 0; i < copy; i++) {
-                        buf.putShort(pcm[offset + i]);
-                    }
-                    for (int i = copy; i < frameSamples; i++) {
-                        buf.putShort((short) 0);
-                    }
-                    long ptsUs = (long) ((double) offset / sampleRate * 1_000_000);
-                    encoder.queueInputBuffer(inIndex, 0, frameSamples * 2, ptsUs, 0);
-                    offset += copy;
                     if (offset >= pcm.length) {
-                        int eosIndex = encoder.dequeueInputBuffer(10_000);
-                        if (eosIndex >= 0) {
-                            encoder.queueInputBuffer(eosIndex, 0, 0, ptsUs, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
-                            inputDone = true;
+                        // 全部数据已送入，标记输入结束
+                        long lastPtsUs = (long) ((double) pcm.length / sampleRate * 1_000_000);
+                        encoder.queueInputBuffer(inIndex, 0, 0, lastPtsUs, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                        inputDone = true;
+                    } else {
+                        ByteBuffer buf = encoder.getInputBuffer(inIndex);
+                        buf.clear();
+                        int copy = Math.min(frameSamples, pcm.length - offset);
+                        for (int i = 0; i < copy; i++) {
+                            buf.putShort(pcm[offset + i]);
                         }
+                        for (int i = copy; i < frameSamples; i++) {
+                            buf.putShort((short) 0);
+                        }
+                        long ptsUs = (long) ((double) offset / sampleRate * 1_000_000);
+                        encoder.queueInputBuffer(inIndex, 0, frameSamples * 2, ptsUs, 0);
+                        offset += copy;
                     }
                 }
             }

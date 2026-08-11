@@ -3,8 +3,6 @@
 set -e
 cd "$(dirname "$0")"
 
-echo "==> 1/3 推送 main 分支"
-git push origin main
 
 echo "==> 2/3 构建 Debug APK"
 cd MalodyBSC-android

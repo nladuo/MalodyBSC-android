@@ -1,6 +1,7 @@
 package com.example.malodybeatmapspeedchanger.generator;
 
 import com.example.malodybeatmapspeedchanger.audio.AudioProcessor;
+import com.example.malodybeatmapspeedchanger.audio.AudioSpeedChanger;
 import com.example.malodybeatmapspeedchanger.model.Beatmap;
 import com.example.malodybeatmapspeedchanger.model.ImdData;
 import com.example.malodybeatmapspeedchanger.parser.ImdParser;
@@ -31,13 +32,8 @@ public final class BeatmapGenerator {
     /** 输出音频扩展名（Android MediaCodec 仅支持 AAC 编码） */
     public static final String AUDIO_EXT = ".m4a";
 
-    /** 音频变速处理器，可在测试中注入假实现 */
-    public static volatile AudioProcessor audioProcessor = new AudioProcessor() {
-        @Override
-        public void process(File src, double speed, File dst) throws Exception {
-            throw new IllegalStateException("audioProcessor 未初始化，请先设置 AudioSpeedChanger");
-        }
-    };
+    /** 音频变速处理器，默认使用纯原生实现（MediaCodec + WSOLA）；单元测试中可注入假实现 */
+    public static volatile AudioProcessor audioProcessor = new AudioSpeedChanger();
 
     private BeatmapGenerator() {
     }

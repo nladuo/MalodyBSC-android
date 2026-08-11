@@ -1,0 +1,13 @@
+# IDE
+.idea/
+*.iml
+
+# 构建产物
+*.apk
+*.aab
+
+# macOS
+.DS_Store
+
+# 本地辅助脚本
+build_apk.sh

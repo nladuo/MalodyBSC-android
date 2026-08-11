@@ -11,7 +11,7 @@ Android 版 **Malody 谱面调速器**（纯本地实现）。
 - 自动解析包内所有谱面（`.mc` / `.osu` / `.imd`）
 - 调速范围 **0.50x ~ 2.00x**，自动修改 BPM / 偏移 / 时间轴
 - 音频变速使用**纯本地实现**：MediaCodec 解码 → WSOLA 算法变速 → AAC 编码（`.m4a`）
-- 生成结果自动重新打包为 `.mcz` / `.osz` / `.zip`，可**保存**（SAF）或**分享**
+- 生成结果自动重新打包为 `.mcz` / `.osz` / `.zip`，可**保存**（SAF 或直接保存到 `/MalodyBSC`）
 - 支持从文件管理器「打开方式」直接进入解析
 - 无需申请任何运行时权限
 
@@ -21,7 +21,7 @@ Android 版 **Malody 谱面调速器**（纯本地实现）。
 2. 从下拉列表选择一个谱面（显示 `Malody｜难度名` / `osu!｜难度名` / `节奏大师｜版本`）；
 3. 拖动滑杆设置速度（0.50x ~ 2.00x，默认 1.20x）；
 4. 点击「生成谱面」，等待音频变速完成；
-5. 生成完成后点击「保存到...」选择位置，或「分享」发送给他人。
+5. 生成完成后点击「保存到...」（SAF 选位置）或「保存到 /MalodyBSC」（需开启所有文件访问权限）。
 
 > 生成结果中的音频为 `.m4a`（AAC）。由于 Android 系统编解码器不支持 MP3 编码，
 > 原 Web 后端输出的 `.mp3` 在纯本地实现中改为 `.m4a`，Malody / osu! 均可正常读取。
@@ -41,7 +41,7 @@ Android 版 **Malody 谱面调速器**（纯本地实现）。
 
 ```
 ├── app/src/main/java/com/example/malodybeatmapspeedchanger/
-│   ├── MainActivity.java        # 主界面（选文件→解析→调速→保存/分享）
+│   ├── MainActivity.java        # 主界面（选文件→解析→调速→保存）
 │   ├── model/                   # Beatmap、ImdData 数据模型
 │   ├── parser/                  # OsuParser、ImdParser（谱面解析/写出）
 │   ├── generator/               # BeatmapGenerator（mc/osu/rm 调速生成）

@@ -40,7 +40,7 @@
 │        │           MediaCodec(AAC)+MediaMuxer 编码 → .m4a    │
 │        └─ 把工作目录重新打包为 .mcz/.osz/.zip                 │
 │        ▼                                                     │
-│  保存(ACTION_CREATE_DOCUMENT) / 分享(FileProvider+ACTION_SEND)│
+│  保存(ACTION_CREATE_DOCUMENT / /MalodyBSC 直接保存)│
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -119,9 +119,9 @@
 ## 5. UI 与权限
 
 - **单 Activity**（`MainActivity`）：SAF 选文件 → Spinner 选谱面 → SeekBar 调速度 →
-  生成 → 保存 / 分享。
-- **零权限**：读写全部通过 SAF（`ACTION_OPEN_DOCUMENT` / `ACTION_CREATE_DOCUMENT`），
-  分享通过 `FileProvider`（`xml/file_paths.xml` 暴露 `cache/files` 目录）。
+  生成 → 保存（SAF 或直接保存到 /MalodyBSC）。
+- **读写**：默认通过 SAF（`ACTION_OPEN_DOCUMENT` / `ACTION_CREATE_DOCUMENT`）无需权限；
+  直接保存到 `/MalodyBSC` 时，Android 11+ 需「所有文件访问权限」，Android 10 及以下需写存储权限。
 - **打开方式**：`AndroidManifest.xml` 中 `MainActivity` 注册 `VIEW` intent-filter，
   支持 `content://` 与 `file://` 的 `.msz/.mcz/.osz/.zip/.imd`。
 

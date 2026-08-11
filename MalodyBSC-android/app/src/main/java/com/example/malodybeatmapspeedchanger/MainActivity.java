@@ -1,10 +1,15 @@
 package com.example.malodybeatmapspeedchanger;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.example.malodybeatmapspeedchanger.audio.AudioSpeedChanger;
@@ -25,6 +32,7 @@ import com.example.malodybeatmapspeedchanger.util.BeatmapArchive;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -43,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQ_PICK_FILE = 1001;
     private static final int REQ_SAVE_FILE = 1002;
+    private static final int REQ_STORAGE = 1003;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -55,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnPick;
     private Button btnGenerate;
     private Button btnSave;
+    private Button btnSaveLocal;
     private Button btnShare;
     private ProgressBar progressBar;
     private LinearLayout beatmapPanel;
@@ -77,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         btnPick = findViewById(R.id.btn_pick);
         btnGenerate = findViewById(R.id.btn_generate);
         btnSave = findViewById(R.id.btn_save);
+        btnSaveLocal = findViewById(R.id.btn_save_local);
         btnShare = findViewById(R.id.btn_share);
         progressBar = findViewById(R.id.progress_bar);
         beatmapPanel = findViewById(R.id.beatmap_panel);
@@ -106,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
         btnGenerate.setOnClickListener(v -> generate());
 
         btnSave.setOnClickListener(v -> saveTo());
+
+        btnSaveLocal.setOnClickListener(v -> saveToMalodyBsc());
 
         btnShare.setOnClickListener(v -> share());
 
@@ -243,6 +256,67 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "已保存", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, "保存失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /** 直接保存到 /storage/emulated/0/MalodyBSC（需要“所有文件访问权限”） */
+    private void saveToMalodyBsc() {
+        if (generatedFile == null) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                Toast.makeText(this, "需要开启「所有文件访问权限」才能直接保存到 /MalodyBSC", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    startActivity(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION));
+                }
+                return;
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_STORAGE);
+                return;
+            }
+        }
+        saveToMalodyBscInternal();
+    }
+
+    private void saveToMalodyBscInternal() {
+        try {
+            File dir = new File(Environment.getExternalStorageDirectory(), "MalodyBSC");
+            if (!dir.exists() && !dir.mkdirs()) {
+                throw new Exception("无法创建目录: " + dir.getAbsolutePath());
+            }
+            File target = new File(dir, suggestOutputName());
+            try (InputStream in = new FileInputStream(generatedFile);
+                 OutputStream out = new FileOutputStream(target)) {
+                byte[] buffer = new byte[8192];
+                int n;
+                while ((n = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, n);
+                }
+            }
+            Toast.makeText(this, "已保存到 " + target.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "保存失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                saveToMalodyBscInternal();
+            } else {
+                Toast.makeText(this, "未授予存储权限，无法保存到 /MalodyBSC", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

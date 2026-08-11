@@ -2,9 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 纯本地 App：无需任何运行时权限，使用 SAF 读写文件 -->
+    <!-- 纯本地 App：读写默认走 SAF，无需权限；如需直接保存到 /MalodyBSC 目录 -->
+    <!-- 则在 Android 11+ 需要“所有文件访问权限”，Android 10 及以下需要写存储权限 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

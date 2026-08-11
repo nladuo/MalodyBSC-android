@@ -135,6 +135,21 @@
                     android:layout_weight="1"
                     android:text="分享" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_save_local"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="保存到 /MalodyBSC" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="「保存到 /MalodyBSC」需要开启所有文件访问权限；保存失败时请用「保存到...」选择位置"
+                android:textColor="#888888"
+                android:textSize="11sp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -2,9 +2,18 @@
 .idea/
 *.iml
 
-# 构建产物
+# Gradle / 构建产物
+.gradle
+/build
+/captures
+.externalNativeBuild
+.cxx
 *.apk
 *.aab
+
+# 本地属性与临时文件
+/local.properties
+local.properties
 
 # macOS
 .DS_Store

@@ -23,7 +23,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.example.malodybeatmapspeedchanger.audio.AudioSpeedChanger;
 import com.example.malodybeatmapspeedchanger.generator.BeatmapGenerator;
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btnGenerate;
     private Button btnSave;
     private Button btnSaveLocal;
-    private Button btnShare;
     private ProgressBar progressBar;
     private LinearLayout beatmapPanel;
     private LinearLayout resultPanel;
@@ -88,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         btnGenerate = findViewById(R.id.btn_generate);
         btnSave = findViewById(R.id.btn_save);
         btnSaveLocal = findViewById(R.id.btn_save_local);
-        btnShare = findViewById(R.id.btn_share);
         progressBar = findViewById(R.id.progress_bar);
         beatmapPanel = findViewById(R.id.beatmap_panel);
         resultPanel = findViewById(R.id.result_panel);
@@ -119,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
         btnSave.setOnClickListener(v -> saveTo());
 
         btnSaveLocal.setOnClickListener(v -> saveToMalodyBsc());
-
-        btnShare.setOnClickListener(v -> share());
 
         // 通过文件管理器“打开方式”进入时直接解析
         Intent intent = getIntent();
@@ -318,19 +313,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "未授予存储权限，无法保存到 /MalodyBSC", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private void share() {
-        if (generatedFile == null) {
-            return;
-        }
-        Uri fileUri = FileProvider.getUriForFile(this,
-                getPackageName() + ".fileprovider", generatedFile);
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("*/*");
-        share.putExtra(Intent.EXTRA_STREAM, fileUri);
-        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(Intent.createChooser(share, "分享谱面"));
     }
 
     /** 建议输出文件名：原名-速度.后缀 */

@@ -31,8 +31,7 @@ Android 版 **Malody 谱面调速器**（纯本地实现）。
 要求：JDK 17+、Android SDK（compileSdk 33）。
 
 ```bash
-cd MalodyBSC-android
-./gradlew :app:assembleDebug          # 打包 Debug APK
+./gradlew :app:assembleDebug              # 打包 Debug APK
 ./gradlew :app:testDebugUnitTest      # 运行 JVM 单元测试（解析/生成/WSOLA）
 ```
 
@@ -41,7 +40,6 @@ cd MalodyBSC-android
 ## 项目结构
 
 ```
-MalodyBSC-android/
 ├── app/src/main/java/com/example/malodybeatmapspeedchanger/
 │   ├── MainActivity.java        # 主界面（选文件→解析→调速→保存/分享）
 │   ├── model/                   # Beatmap、ImdData 数据模型

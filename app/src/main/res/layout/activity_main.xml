@@ -114,27 +114,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="13sp" />
 
-            <LinearLayout
+            <Button
+                android:id="@+id/btn_save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_save"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="保存到..." />
-
-                <Button
-                    android:id="@+id/btn_share"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:text="分享" />
-            </LinearLayout>
+                android:text="保存到..." />
 
             <Button
                 android:id="@+id/btn_save_local"

@@ -20,3 +20,4 @@ local.properties
 
 # 本地辅助脚本
 build_apk.sh
+.DS_Store
